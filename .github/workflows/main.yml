@@ -1,0 +1,26 @@
+name: Run Script at 3AM Beijing Time
+
+on:
+  schedule:
+    - cron: '0 19 * * *'  # 每天 UTC 19:00（= 北京时间 3:00）
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # 最多运行 6 小时（3:00 ~ 9:00）
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt || echo "No requirements.txt"
+
+      - name: Run script
+        run: python main.py
